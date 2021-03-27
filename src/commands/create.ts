@@ -1,25 +1,29 @@
-import {Command, flags} from '@oclif/command'
+import { flags } from '@oclif/command'
+import execa from 'execa'
+import { hostname, userInfo } from 'os'
+import { BaseCommand } from '../lib'
 
-export default class Create extends Command {
+const Username = userInfo().username
+
+export default class Create extends BaseCommand {
   static description = 'describe the command here'
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    ...BaseCommand.flags,
+
+    comment: flags.string({
+      char: 'C',
+      description:
+        'An optional comment field to append to the end of your public key.',
+      default: `${userInfo().username}@${hostname}`
+    })
   }
 
-  static args = [{name: 'file'}]
-
   async run() {
-    const {args, flags} = this.parse(Create)
+    const { args, flags } = this.parse(Create)
+    const { exitCode, stderr, stdout } = await execa('')
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/jisodl0/Development/Projects/alcha/clis/argus/src/commands/create.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+    if (exitCode === 0) this.log(stdout)
+    else this.error(stderr)
   }
 }
