@@ -1,0 +1,72 @@
+{
+  "name": "@4lch4/argus",
+  "description": "A CLI utility for managing numerous SSH keys.",
+  "version": "0.0.0",
+  "author": "4lch4",
+  "bin": {
+    "argus": "./bin/run"
+  },
+  "main": "dist/index.js",
+  "oclif": {
+    "commands": "./dist/commands",
+    "bin": "argus",
+    "dirname": "argus",
+    "plugins": [
+      "@oclif/plugin-autocomplete",
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found"
+    ],
+    "macos": {
+      "identifier": "com.4lch4.argus"
+    }
+  },
+  "bugs": "https://github.com/4lch4/argus/issues",
+  "dependencies": {
+    "@4lch4/logger": "^1.2.0",
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-autocomplete": "^0.3.0",
+    "@oclif/plugin-help": "^3",
+    "@oclif/plugin-not-found": "^1.2.4",
+    "enquirer": "^2.3.6",
+    "fs-extra": "^9.1.0",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/fs-extra": "^9.0.9",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "globby": "^10",
+    "mocha": "^5",
+    "nyc": "^14",
+    "prettier": "^2.2.1",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/4lch4/argus",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "repository": "4lch4/argus",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf dist && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "dist/index.d.ts"
+}
