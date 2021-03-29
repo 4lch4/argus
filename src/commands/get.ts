@@ -1,25 +1,30 @@
-import {Command, flags} from '@oclif/command'
+import { flags } from '@oclif/command'
+import { BaseCommand, DefaultSSHDir, IOUtil } from '../lib'
 
-export default class Get extends Command {
+export default class Get extends BaseCommand {
   static description = 'describe the command here'
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    ...BaseCommand.flags,
+
+    scope: flags.string({
+      char: 's',
+      default: 'default'
+    }),
+
+    name: flags.string({
+      char: 'n',
+      required: true
+    })
   }
 
-  static args = [{name: 'file'}]
-
   async run() {
-    const {args, flags} = this.parse(Get)
+    const { flags} = this.parse(Get)
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/jisodl0/Development/Projects/alcha/clis/argus/src/commands/get.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+    const ioUtil = IOUtil.newInstance(DefaultSSHDir)
+    const keyRes = await ioUtil.getKey(flags.scope, flags.name)
+    console.log(keyRes)
+
+    this.exit(0)
   }
 }
