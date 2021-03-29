@@ -2,7 +2,11 @@
   "name": "@4lch4/argus",
   "description": "A CLI utility for managing numerous SSH keys.",
   "version": "0.0.0",
-  "author": "4lch4",
+  "author": {
+    "name": "4lch4",
+    "url": "https://alcha.org",
+    "email": "inbox@4lch4.dev"
+  },
   "bin": {
     "argus": "./bin/run"
   },
