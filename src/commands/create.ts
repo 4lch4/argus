@@ -1,29 +1,35 @@
-import { flags } from '@oclif/command'
-import execa from 'execa'
-import { hostname, userInfo } from 'os'
-import { BaseCommand } from '../lib'
-
-const Username = userInfo().username
+import { BaseCommand, CreateFlags, KeyGen, logger } from '../lib'
 
 export default class Create extends BaseCommand {
-  static description = 'describe the command here'
+  keygen = new KeyGen()
+
+  static description =
+    'Create a new SSH key interactively or via command flags.'
 
   static flags = {
     ...BaseCommand.flags,
 
-    comment: flags.string({
-      char: 'C',
-      description:
-        'An optional comment field to append to the end of your public key.',
-      default: `${userInfo().username}@${hostname}`
-    })
+    ...CreateFlags
   }
 
   async run() {
-    const { args, flags } = this.parse(Create)
-    const { exitCode, stderr, stdout } = await execa('')
+    const { flags } = this.parse(Create)
 
-    if (exitCode === 0) this.log(stdout)
-    else this.error(stderr)
+    // Get the needed data for creating a key via the flags or prompting user.
+    const keyData = await this.keygen.getKeyData(flags)
+
+    // Save the key to disk.
+    const createRes = await this.keygen.createKey(keyData)
+
+    // Validate the key was successfully saved.
+    if (createRes) {
+      // Output some info regarding the newly created key.
+      logger.success(`${keyData.keyName} successfully created!`)
+      logger.success(`Key pair stored in ${createRes.keyDir}`)
+    } else {
+      // An error was encountered, close out with a simple message. An actual
+      // error should have been posted earlier.
+      this.error('There was an error when attempting to create the SSH key.')
+    }
   }
 }

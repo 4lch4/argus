@@ -6,12 +6,15 @@ export interface SSHKey {
   /** The absolute path to the SSH key. */
   path: string
 
-  /** What type of key the file is, Public or Private. */
-  type: 'Public' | 'Private'
-
   /** The content of the private key. */
-  // privateKey: string
+  privateKeyContent: string
+
+  /** The path to the private key. */
+  privateKeyPath: string
 
   /** The content of the public key. */
-  // publicKey: string
+  publicKeyContent: string
+
+  /** The path to the public key. */
+  publicKeyPath: string
 }
