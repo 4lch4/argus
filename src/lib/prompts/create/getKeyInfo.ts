@@ -2,12 +2,27 @@ import { prompt } from 'enquirer'
 import { hostname, userInfo } from 'os'
 import { CreateKeyPrompt, SSHKeyType } from '../../../interfaces'
 
+/**
+ * Returns a number for the size of the key based on the type of key to create.
+ * With the exception of ed25519, they're merely suggestions. ed25519 is locked
+ * to 256 bits.
+ *
+ * @param keyType The type of key to get the initial size for.
+ * @returns The initial size of the key.
+ */
 function getInitialBits(keyType: SSHKeyType): number {
   if (keyType == SSHKeyType.ed25519) return 256
   else if (keyType == SSHKeyType.ecdsa) return 521
   else return 4096
 }
 
+/**
+ * Uses enquirer to prompt the user for the various pieces of data needed to
+ * create a new key. Such as the name, type, size/bits, and an optional scope,
+ * comment, and passphrase.
+ *
+ * @returns The data needed to create a new key.
+ */
 export async function getKeyInfo(): Promise<CreateKeyPrompt> {
   const { keyName, keyType } = await prompt<{
     keyName: string

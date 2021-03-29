@@ -7,6 +7,19 @@ import { getKeyInfo } from './prompts'
 import { logger } from './utils'
 
 export class KeyGen {
+  private get binPath() {
+    if (process.platform !== 'win32') return 'ssh-keygen'
+
+    switch (process.arch) {
+      case 'ia32':
+        return join(__dirname, 'bin', 'ssh-keygen-32.exe')
+      case 'x64':
+        return join(__dirname, 'bin', 'ssh-keygen-64.exe')
+    }
+
+    throw new Error('Unsupported platform')
+  }
+
   async createKey(
     opts: CreateKeyPrompt
   ): Promise<undefined | CreateKeyResponse> {
@@ -16,7 +29,8 @@ export class KeyGen {
       const filePath = join(keyDir, opts.keyName)
 
       await ensureDir(keyDir)
-      const { exitCode, stdout, stderr } = await execa('ssh-keygen', [
+
+      const { exitCode, stdout, stderr } = await execa(this.binPath, [
         '-t',
         opts.keyType,
         '-f',
@@ -40,34 +54,23 @@ export class KeyGen {
     }
   }
 
+  /**
+   * Returns the key data provided via the flags, if present, otherwise the user
+   * will be prompted to provide the information instead.
+   *
+   * @param flags The flags from the create command.
+   * @returns The data needed to create a new key.
+   */
   async getKeyData(flags: any): Promise<CreateKeyPrompt> {
-    if (flags.type) {
-      return {
-        bits: flags.bits,
-        keyName: flags.name,
-        keyType: flags.type,
-        comment: flags.comment,
-        scope: flags.scope,
-        passphrase: flags.passphrase
-      }
-    } else {
-      const {
-        bits,
-        keyName,
-        keyType,
-        comment,
-        passphrase,
-        scope
-      } = await getKeyInfo()
-
-      return {
-        bits,
-        keyName,
-        keyType,
-        comment,
-        scope,
-        passphrase
-      }
-    }
+    return flags.type
+      ? {
+          bits: flags.bits,
+          keyName: flags.name,
+          keyType: flags.type,
+          comment: flags.comment,
+          scope: flags.scope,
+          passphrase: flags.passphrase
+        }
+      : await getKeyInfo()
   }
 }
