@@ -1,6 +1,8 @@
 # @4lch4/argus
 
-A CLI utility for managing numerous SSH keys. Named after [Argus Filch][0] from Harry Potter.
+A CLI utility for managing numerous SSH keys with a key generation command that utilizes ssh-keygen under the hood.
+
+The app is named after [Argus Filch][0] from Harry Potter.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/@4lch4/argus.svg)](https://npmjs.org/package/@4lch4/argus)
