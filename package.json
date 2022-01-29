@@ -31,7 +31,7 @@
     "@oclif/config": "^1",
     "@oclif/plugin-autocomplete": "^0.3.0",
     "@oclif/plugin-help": "^3",
-    "@oclif/plugin-not-found": "^1.2.4",
+    "@oclif/plugin-not-found": "^1.2.6",
     "cli-table3": "^0.6.0",
     "enquirer": "^2.3.6",
     "execa": "^5.0.0",
